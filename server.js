@@ -203,25 +203,31 @@ app.use((req, res) => {
 // INIT
 (async () => {
   console.log("🚀 Starting server...");
-  
+
   try {
     console.log("📡 Connecting to MongoDB...");
     await connectMongo();
     console.log("✅ MongoDB connected!");
-    
+
     console.log("📡 Connecting to Postgres...");
     await sequelize.authenticate();
     console.log("✅ Postgres connected!");
-    
+
     console.log("🔄 Syncing database...");
     await sequelize.sync();
     console.log("✅ Database synced!");
-    
-    app.listen(PORT, () => {
-      console.log(`✅ Server running on http://localhost:${PORT}`);
-    });
+
+    // Only start listening when running locally (not in serverless env)
+    if (!process.env.VERCEL) {
+      app.listen(PORT, () => {
+        console.log(`✅ Server running on http://localhost:${PORT}`);
+      });
+    }
   } catch (err) {
     console.error("❌ Startup failed:", err.message);
-    process.exit(1);
+    // do NOT process.exit in Vercel
   }
 })();
+
+// Export the app so Vercel can use it as a handler
+module.exports = app;
