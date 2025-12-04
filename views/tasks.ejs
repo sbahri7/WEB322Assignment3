@@ -1,0 +1,42 @@
+<%- include("layout", {
+  title: "My Tasks",
+  body: `
+    <h1>My Tasks</h1>
+    <p><a href="/tasks/add">+ Add New Task</a></p>
+
+    ${tasks.length === 0 ? `
+      <p>You don't have any tasks yet.</p>
+    ` : `
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${tasks.map(t => `
+            <tr>
+              <td>${t.title}</td>
+              <td>${t.dueDate ? new Date(t.dueDate).toLocaleDateString() : "-"}</td>
+              <td>${t.status}</td>
+              <td>
+                <form method="post" action="/tasks/status/${t.id}" style="display:inline;">
+                  <button type="submit">
+                    Mark ${t.status === "completed" ? "Pending" : "Completed"}
+                  </button>
+                </form>
+                <a href="/tasks/edit/${t.id}">Edit</a>
+                <form method="post" action="/tasks/delete/${t.id}" style="display:inline;" onsubmit="return confirm('Delete this task?');">
+                  <button type="submit">Delete</button>
+                </form>
+              </td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    `}
+  `
+}) %>

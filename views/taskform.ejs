@@ -1,0 +1,36 @@
+<%- include("layout", {
+  title: task ? "Edit Task" : "Add Task",
+  body: `
+    <h1>${task ? "Edit Task" : "Add New Task"}</h1>
+    ${error ? `<p class="error">${error}</p>` : ""}
+
+    <form method="post" action="${task ? "/tasks/edit/" + task.id : "/tasks/add"}" class="form">
+      <label>
+        Title
+        <input type="text" name="title" value="${task ? task.title : ""}" required />
+      </label>
+
+      <label>
+        Description
+        <textarea name="description" rows="4">${task ? (task.description || "") : ""}</textarea>
+      </label>
+
+      <label>
+        Due Date
+        <input type="date" name="dueDate"
+          value="${task && task.dueDate ? new Date(task.dueDate).toISOString().slice(0,10) : ""}" />
+      </label>
+
+      <label>
+        Status
+        <select name="status">
+          <option value="pending" ${!task || task.status === "pending" ? "selected" : ""}>Pending</option>
+          <option value="completed" ${task && task.status === "completed" ? "selected" : ""}>Completed</option>
+        </select>
+      </label>
+
+      <button type="submit">${task ? "Update Task" : "Create Task"}</button>
+      <a href="/tasks">Cancel</a>
+    </form>
+  `
+}) %>

@@ -1,0 +1,9 @@
+<%- include("layout", {
+  title: "Dashboard",
+  body: `
+    <h1>Dashboard</h1>
+    <p>Welcome, ${user.username}!</p>
+    <p>Total: ${stats.total}, Completed: ${stats.completed}, Pending: ${stats.pending}</p>
+    <p><a href="/tasks">Go to tasks</a></p>
+  `
+}) %>
