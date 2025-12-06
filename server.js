@@ -56,17 +56,21 @@ app.get("/register", (req, res) => {
 
 app.post("/register", async (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
+
   if (!username || !email || !password || password !== confirmPassword) {
     return res.render("register", {
       error: "Invalid input or passwords do not match.",
       formData: { username, email }
     });
   }
+
   try {
     const user = new User({ username, email, password });
     await user.save();
     res.redirect("/login");
   } catch (err) {
+    console.error("REGISTER ERROR:", err);   // <- add this line
+
     let msg = "Registration failed.";
     if (err.code === 11000) {
       msg = "Username or email already exists.";
